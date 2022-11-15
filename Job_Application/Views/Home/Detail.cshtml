@@ -1,0 +1,77 @@
+﻿
+
+
+  
+
+@model SampleCore.Core.Model.Application
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+
+         <table class="table table-bordered table-striped" >
+    <thead>
+        <tr>
+            <th >
+                @Html.DisplayNameFor(model => model.PersonID)
+            </th>
+             <th >
+                @Html.DisplayNameFor(model => model.FullName)
+            </th>
+            <th >
+                @Html.DisplayNameFor(model => model.HSCMarks)
+            </th>
+            
+            <th >
+                @Html.DisplayNameFor(model => model.SSLCMarks)
+            </th>
+            <th >
+                @Html.DisplayNameFor(model => model.GraduationPercent)
+            </th>
+             <th >
+                @Html.DisplayNameFor(model => model.Interests)
+            </th>
+             <th >
+                @Html.DisplayNameFor(model => model.Skills)
+            </th>
+           
+        </tr> </thead>
+        
+           
+            <tr>
+                <th >
+                @Html.DisplayFor(model => model.PersonID)
+            </th>
+                <th >
+                @Html.DisplayFor(model => model.FullName)
+            </th>
+                
+                <td>
+                    @Html.DisplayFor(model => model.HSCMarks)
+                </td>
+               
+                <td>
+                     @Html.DisplayFor(model => model.SSLCMarks)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.GraduationPercent)
+                </td>
+                <td>
+                    @Html.DisplayFor(model => model.Interests)
+                </td>
+                  <td>
+                    @Html.DisplayFor(model => model.Skills)
+                </td>
+               
+               
+               </tr>
+            
+  
+</table>
+
+
+   
+
+
+
