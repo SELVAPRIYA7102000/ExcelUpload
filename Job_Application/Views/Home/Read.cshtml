@@ -10,9 +10,9 @@
 @model IEnumerable<SampleCore.Core.Model.Application>
 <style>
      body {
-        background-image: url('https://img.freepik.com/free-vector/3d-perspective-style-diamond-shape-white-background_1017-27556.jpg?w=2000');
+        background-image: url('https://png.pngtree.com/background/20210711/original/pngtree-minimalistic-blue-honeycomb-technology-background-picture-image_1085284.jpg');
         background-repeat: no-repeat;
-        background-size: cover;
+        background-size: 1270px;
     }
      a {
         text-decoration: none;
@@ -78,11 +78,11 @@
                       <td>
                            <button type="button" style="border:hidden;background-color:none" data-bs-toggle="modal" data-bs-target="#myModal"
                             onclick="partial('@i.PersonID')">
-                                <i class="fa fa-eye" style="font-size:21px"></i> 
+                                <i class="fa fa-eye" style="font-size:21px;background-color:none"></i> 
                             </button>&nbsp;&nbsp;&nbsp;
 
                               @Html.ActionLink("", "Download", new {@filename=i.ApplicantResume},
-                new{@class="fa fa-download",title="Download Excel",style="color:#556B2F;text-decoration:none;font-size:21px"})
+                new{@class="fa fa-download",title="Download Excel",style="color:black;text-decoration:none;font-size:21px"})
                
 
              

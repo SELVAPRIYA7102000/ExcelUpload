@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Hosting.Server;
 using IHostingEnvironment = Microsoft.AspNetCore.Hosting.IHostingEnvironment;
 using ExcelDataReader;
 using ClosedXML.Excel;
+using System.Text.RegularExpressions;
 
 namespace Job_Application.Controllers
 {
@@ -35,55 +36,152 @@ namespace Job_Application.Controllers
         {
             return View();
         }
+        private bool IsNumber(string value)
+        {
+            bool IsValid = false;
+            return value.All(char.IsDigit);
+        }
+        private bool IsLetter(string value)
+        {
+            Regex regexLetter = new Regex("[a-zA-Z ]");
+            return regexLetter.IsMatch(value);
+        }
+
+        [HttpPost]
        
-        [HttpPost]      
         public IActionResult Index(IFormFile postedFile, Application data)
         {
-            
+           
 
-            if (postedFile != null)
-            {
-                //Create a Folder.
-               string path = Path.Combine(this.Environment.WebRootPath, "Uploads");
+                if (postedFile != null)
+                {
+                    //Create a Folder.
+                    string path = Path.Combine(this.Environment.WebRootPath, "Uploads");
 
-                if (!Directory.Exists(path))
-                {
-                    Directory.CreateDirectory(path);
-                }
-
-                //Save the uploaded Excel file.
-                string fileName = Path.GetFileName(postedFile.FileName);
-                string filePath = Path.Combine(path, fileName);
-                using (FileStream stream = new FileStream(filePath, FileMode.Create))
-                {
-                    postedFile.CopyTo(stream);
-                }
-                data.ApplicantResume = filePath;
-                System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
-                {
-                    using (var reader = ExcelReaderFactory.CreateReader(stream))
+                    if (!Directory.Exists(path))
                     {
-                        while (reader.Read()) //Each row of the file
-                        {
-                          
-                            data.FullName = reader.GetValue(0).ToString();                          
-                            data.HSCMarks = reader.GetValue(1).ToString();
-                            data.SSLCMarks = reader.GetValue(2).ToString();
-                            data.GraduationPercent = reader.GetValue(3).ToString();
-                            data.Interests = reader.GetValue(4).ToString();
-                            data.Skills = reader.GetValue(5).ToString();
-                        }
+                        Directory.CreateDirectory(path);
                     }
-                }
-          
 
+                    //Save the uploaded Excel file.
+                    string fileName = Path.GetFileName(postedFile.FileName);
+                    string filePath = Path.Combine(path, fileName);
+                    using (FileStream stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        postedFile.CopyTo(stream);
+                    }
+                    data.ApplicantResume = filePath;
+                    System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+                var i = 0;
+                using (var stream = System.IO.File.Open(filePath, FileMode.Open, FileAccess.Read))
+                    {
+                        using (var reader = ExcelReaderFactory.CreateReader(stream))
+                        {
+                            while (reader.Read()) //Each row of the file
+                            {
+                            data.FullName = (reader.GetValue(0) != null) ? reader.GetValue(0).ToString() : "";
+                            data.HSCMarks = (reader.GetValue(1) != null) ? reader.GetValue(1).ToString() : "";
+                            data.SSLCMarks= (reader.GetValue(2) != null) ? reader.GetValue(2).ToString() : "";
+                            data.GraduationPercent= (reader.GetValue(3) != null) ? reader.GetValue(3).ToString() : "";
+                            data.Interests = (reader.GetValue(4) != null) ? reader.GetValue(4).ToString() : "";
+                            data.Skills = (reader.GetValue(5) != null) ? reader.GetValue(5).ToString() : "";
+                           
+                            }
+                        if (data.FullName != "")
+                        {
+                            if (!IsLetter(data.FullName))
+                            {
+                                i++;
+                                ViewBag.ErrorMessageForName = "FullName must be in letters.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessageForName = "Fullname Field Is Empty.";
+                        }
+                        if (data.HSCMarks != "")
+                        {
+                            // Check Name is Number or not.
+                            if (!IsNumber(data.HSCMarks))
+                            {
+                                i++;
+                                ViewBag.ErrorMessageForHSCMarks = "HSCMarks field must be in Numbers.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessageForHSCMarks = "HSCMark Field Is Empty.";
+                        }
+                        if (data.SSLCMarks!= "")
+                        {
+                            // Check Date is Number or not.
+                            if (!IsNumber(data.SSLCMarks))
+                            {
+                                i++;
+                                ViewBag.ErrorMessageForSSLCMarks = "SSLCMark field must be in Numbers.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessageForSSLCMarks = "SSLCMark Field Is Empty.";
+                        }
+                        if (data.GraduationPercent != "")
+                        {
+                            if (!IsNumber(data.GraduationPercent))
+                            {
+                                i++;
+                                ViewBag.ErrorMessageForCGPA = "Percentage must be in numbers.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessageForCGPA = "Percentage Field Is Empty.";
+                        }
+                        if (data.Interests != "")
+                        {
+                            if (!IsLetter(data.Interests))
+                            {
+                                i++;
+                                ViewBag.ErrorMessageForInterest = "Letters only allowed in Interest field.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessageForInterest = "Interest Field Is Empty.";
+                        }
+
+                        if (data.Skills != "")
+                        {
+                            if (!IsLetter(data.Skills))
+                            {
+                                i++;
+                                ViewBag.ErrorMessageForSkills = "Letters only allowed in skills field.";
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.ErrorMessageForSkills = "Skills Field Is Empty.";
+                        }
+
+                       
+
+                        if (i == 0)
+                        {
+                            _ApplicationServices.CreateApplicationEntry(data);
+
+
+                            return RedirectToAction("Read");
+                        }
+                    
+                
             }
-            
-            _ApplicationServices.CreateApplicationEntry(data);
+                    }
+
+
+                }
+            return View("Index");
            
-           
-            return RedirectToAction("Read");
+          
         }
         #region Read data from table
         public IActionResult Read()

@@ -11,12 +11,16 @@
         text-decoration: none;
         color: white;
     }
-
+     body {
+        background-image: url('https://img.freepik.com/premium-photo/top-view-photo-spectacles-laptop-plant-small-spiral-copybook-pen-isolated-white-wooden-table-background-with-blank-space_352249-5918.jpg?w=2000');
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
         a:hover {
             color: black;
         }
   input[type=email],select{
-       width: 60%;
+       width: 40%;
   padding: 5px 5px;
   margin: 8px 0;
   display: inline-block;
@@ -26,7 +30,7 @@
  /* width: max-content;*/
   }
 input[type=text],select {
-  width: 60%;
+  width: 40%;
   padding: 5px 5px;
   margin: 8px 0;
   display: inline-block;
@@ -46,12 +50,12 @@ input[type=text],select {
 @using (Html.BeginForm("Index", "Home",FormMethod.Post, new { id = "signupForm",enctype="multipart/form-data"})) 
 {
 
-        <div class="form-container" style="margin-left:350px">
+        <div class="form-container" style="margin-left:20px">
             
                  <h4>Job Application</h4>
                  @Html.HiddenFor(model=>model.PersonID)
                <h6> <span class="required">*</span>Applicant Name </h6>
-                <div class="form-group">@Html.TextBoxFor(model=>model.Name,new{placeholder="Name",maxlength="15", pattern="[a-zA-Z]{1,15}"})
+                <div class="form-group">@Html.TextBoxFor(model=>model.Name,new{placeholder="Name",maxlength="15", pattern="[a-zA-Z ]{1,15}"})
                     </div> 
                     <h6><span class="required">*</span>Gender</h6>
                 @*<div class="form-group">@Html.TextBoxFor(model=>model.Gender,new{placeholder="Gender",maxlength="7"})</div>*@
@@ -75,8 +79,17 @@ input[type=text],select {
        <div>
          <h6><span class="required">*</span>Upload Excel</h6>
         <input type="file" name="postedFile" @*accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"*@ />
-    
+    <div style="color:darkred">
+        @ViewBag.ErrorMessageForName
+        @ViewBag.ErrorMessageForHSCMarks
+         @ViewBag.ErrorMessageForSSLCMarks
+           @ViewBag.ErrorMessageForCGPA &nbsp;
+                @ViewBag.ErrorMessageForInterest &nbsp;
+                @ViewBag.ErrorMessageForSkills
+    </div>
       </div><br>
+
+    
           
                 <button class="btn btn-primary btn-block" type="submit"   onclick="SubmitDetails()">Submit</button>
 
@@ -97,7 +110,8 @@ input[type=text],select {
 
             rules: {
                 Name: {
-                    required: true
+                    required: true,
+
                   
                 },
                 Gender:{

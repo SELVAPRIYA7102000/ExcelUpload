@@ -14,8 +14,10 @@ namespace SampleCore.Core.Model
         public string Gender { get; set; }
         public string Location { get; set; }
         public string Email { get; set; }
-        public int Age { get; set; }  
+        public int Age { get; set; }
+       
         public string FullName { get; set; }
+       
         public string SSLCMarks { get; set; }
         public string HSCMarks { get; set; }
         public string GraduationPercent { get; set; }
